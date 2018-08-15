@@ -85,14 +85,6 @@ namespace ProjectSync
             return Path.GetExtension(filePath) == ".syncer";
         }
 
-        [Obsolete]
-        void AssignProjectDataFromFile(string filePath)
-        {
-            LoadProjectFile(filePath);
-
-
-        }
-
         void SetProjectFilePath(string path)
         {
             projectFilePath = path;
