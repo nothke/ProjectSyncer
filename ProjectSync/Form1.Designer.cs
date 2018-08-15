@@ -235,7 +235,6 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "ProjectSyncer";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);

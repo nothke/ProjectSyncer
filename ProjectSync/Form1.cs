@@ -21,9 +21,9 @@ namespace ProjectSync
         {
             InitializeComponent();
 
-            this.AllowDrop = true;
-            this.DragEnter += new DragEventHandler(Form1_DragEnter);
-            this.DragDrop += new DragEventHandler(Form1_DragDrop);
+            AllowDrop = true;
+            DragEnter += new DragEventHandler(Form1_DragEnter);
+            DragDrop += new DragEventHandler(Form1_DragDrop);
 
             if (!string.IsNullOrEmpty(path))
                 LoadProjectFile(path);
@@ -32,6 +32,8 @@ namespace ProjectSync
 
             syncer = new Syncer();
         }
+
+        #region Project file handling
 
         void LoadLastProjectFile()
         {
@@ -75,7 +77,7 @@ namespace ProjectSync
                 return;
             }
 
-            AssignProjectDataFromFile(file);
+            LoadProjectFile(file);
         }
 
         bool IsCorrectExtension(string filePath)
@@ -83,6 +85,7 @@ namespace ProjectSync
             return Path.GetExtension(filePath) == ".syncer";
         }
 
+        [Obsolete]
         void AssignProjectDataFromFile(string filePath)
         {
             LoadProjectFile(filePath);
@@ -90,12 +93,17 @@ namespace ProjectSync
 
         }
 
-        void XMLAppend(XmlDocument doc, XmlElement appendTo, string key, string value)
+        void SetProjectFilePath(string path)
         {
-            var e = doc.CreateElement(key);
-            e.InnerText = value;
-            appendTo.AppendChild(e);
+            projectFilePath = path;
+            Console.WriteLine(path);
+            Properties.Settings.Default.lastProjectFile = path;
+            Properties.Settings.Default.Save();
         }
+
+        #endregion
+
+        #region XML Serialization
 
         void LoadProjectFile(string path)
         {
@@ -137,14 +145,15 @@ namespace ProjectSync
             SetProjectFilePath(path);
         }
 
-        void SetProjectFilePath(string path)
+        static void XMLAppend(XmlDocument doc, XmlElement appendTo, string key, string value)
         {
-            projectFilePath = path;
-            Console.WriteLine(path);
-            Properties.Settings.Default.lastProjectFile = path;
-            Properties.Settings.Default.Save();
+            var e = doc.CreateElement(key);
+            e.InnerText = value;
+            appendTo.AppendChild(e);
         }
 
+        #endregion
+        
         private void button_browseTargetFolder_Click(object sender, EventArgs e)
         {
             //folderBrowserDialog_target.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
@@ -160,18 +169,13 @@ namespace ProjectSync
                 textBox_originFolder.Text = folderBrowserDialog_target.SelectedPath;
         }
 
-        void ApplyPathsFromUIToSyncer()
+        void UpdateSyncerParameters()
         {
             string origin = textBox_originFolder.Text;
             string target = textBox_targetFolder.Text;
 
             syncer.originPath = origin;
             syncer.targetPath = target;
-        }
-
-        void UpdateSyncer()
-        {
-            ApplyPathsFromUIToSyncer();
 
             syncer.SetExcludedExtensions(textBox_bypassExtensions.Text);
             syncer.SetExcudedPrefixes(textBox_bypassPrefixes.Text);
@@ -180,7 +184,7 @@ namespace ProjectSync
         // Detect
         private void button_detect_Click(object sender, EventArgs e)
         {
-            UpdateSyncer();
+            UpdateSyncerParameters();
 
             string[] changedPaths = syncer.GetPathsThatChanged();
             syncer.TrimOriginFolderFromPaths(changedPaths);
@@ -206,9 +210,7 @@ namespace ProjectSync
         // SYNC!
         private void button_sync_Click(object sender, EventArgs e)
         {
-            ApplyPathsFromUIToSyncer();
-
-            syncer.SetExcludedExtensions(textBox_bypassExtensions.Text);
+            UpdateSyncerParameters();
 
             Log(syncer.Sync());
 
@@ -239,6 +241,8 @@ namespace ProjectSync
             }
         }
 
+        #region Log
+
         void Log(string str)
         {
             toolStripStatusLabel.Text = str;
@@ -251,13 +255,11 @@ namespace ProjectSync
             outputBox.SelectedIndex = outputBox.Items.Count - 1;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-        }
-
         private void button_clearLog_Click(object sender, EventArgs e)
         {
             outputBox.Items.Clear();
         }
+
+        #endregion
     }
 }
