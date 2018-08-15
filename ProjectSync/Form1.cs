@@ -190,7 +190,6 @@ namespace ProjectSync
                 outputBox.Items.Add("..");
                 outputBox.Items.AddRange(changedPaths);
 
-
                 Log("Found " + changedPaths.Length + " changed files");
             }
             else
@@ -204,15 +203,13 @@ namespace ProjectSync
         {
             UpdateSyncerParameters();
 
-            Log(syncer.Sync());
+            syncer.Sync();
 
             if (syncer.originFiles != null)
             {
                 //listBox1.Items.Clear();
                 outputBox.Items.Add("..");
-                outputBox.Items.Add("Synced files:");
-                outputBox.Items.Add("..");
-                outputBox.Items.AddRange(syncer.GetShortNames());
+                outputBox.Items.AddRange(syncer.log.ToArray());
                 OutputBoxSelectLast();
             }
         }

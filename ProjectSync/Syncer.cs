@@ -20,7 +20,7 @@ namespace ProjectSync
         public string[] excludedExtensions;
         public string[] excludedPrefixes;
 
-
+        public string[] lastChangedFiles;
 
         public string[] TrimOriginFolderFromPaths(string[] paths)
         {
@@ -168,7 +168,7 @@ namespace ProjectSync
 
                 if (!exists) // if it doesn't exist just overwrite it
                 {
-                    changedPaths.Add(destination);
+                    changedPaths.Add(source);
                 }
                 else // instead compare hashes
                 {
@@ -176,7 +176,7 @@ namespace ProjectSync
                     byte[] destinationHash = GetFileSHA1(destination);
 
                     if (!sourceHash.SequenceEqual(destinationHash))
-                        changedPaths.Add(destination);
+                        changedPaths.Add(source);
 
                     //Console.WriteLine(System.Text.Encoding.Default.GetString(hash));
                 }
@@ -197,45 +197,38 @@ namespace ProjectSync
             return hash;
         }
 
-        public string Sync()
+        public List<string> log = new List<string>();
+
+        public void Sync()
         {
-            if (!Directory.Exists(originPath))
-                return "Origin folder does not exist";
+            log.Clear();
 
-            if (!Directory.Exists(targetPath))
-                return "Target folder does not exist";
+            if (!Directory.Exists(originPath)) { log.Add("Origin folder does not exist"); return; }
+            if (!Directory.Exists(targetPath)) { log.Add("Target folder does not exist"); return; }
+            if (!hasWriteAccessToFolder(targetPath)) { log.Add("You do not have write permission"); return; }
 
-            CacheChanges();
+            string[] changedPaths = GetPathsThatChanged();
 
-            if (!hasWriteAccessToFolder(targetPath))
-                return "You do not have write permission";
-
-            for (int i = 0; i < originFiles.Length; i++)
+            for (int i = 0; i < changedPaths.Length; i++)
             {
-                string source = originFiles[i];
-                string trimmed = TrimOrigin(originFiles[i]);
+                string source = changedPaths[i];
+                string trimmed = TrimOrigin(source);
                 string destination = Path.Combine(targetPath, trimmed);
 
-                bool exists = File.Exists(destination);
+                string dir = Path.GetDirectoryName(destination);
 
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
 
-                if (!exists) // if it doesn't exist just copy it
-                {
-                    string dir = Path.GetDirectoryName(destination);
-                    Console.WriteLine(dir);
-
-                    if (!Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
-
-                    File.Copy(source, destination);
-                }
-                else
-                {
-
-                }
+                Console.WriteLine("Attempting to copy " + source + " to " + destination);
+                File.Copy(source, destination, true);
+                log.Add(trimmed);
             }
 
-            return "Success";
+            lastChangedFiles = changedPaths;
+
+            log.Add("Successfully synced " + changedPaths.Length + " files");
+            return;
         }
     }
 }
