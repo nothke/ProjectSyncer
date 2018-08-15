@@ -209,6 +209,12 @@ namespace ProjectSync
 
             string[] changedPaths = GetPathsThatChanged();
 
+            if (changedPaths.Length == 0)
+            {
+                log.Add("Nothing to sync");
+                return;
+            }
+
             for (int i = 0; i < changedPaths.Length; i++)
             {
                 string source = changedPaths[i];
