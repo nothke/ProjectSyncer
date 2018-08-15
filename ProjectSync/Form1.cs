@@ -178,7 +178,9 @@ namespace ProjectSync
         {
             UpdateSyncerParameters();
 
-            string[] changedPaths = syncer.GetPathsThatChanged();
+            int fileCount = syncer.CacheAllPaths();
+
+            string[] changedPaths = syncer.GetPathsThatChanged(toolStripProgressBar);
             syncer.TrimOriginFolderFromPaths(changedPaths);
 
             bool nothingToSync = syncer.originFiles == null || syncer.originFiles.Length == 0;
@@ -203,7 +205,12 @@ namespace ProjectSync
         {
             UpdateSyncerParameters();
 
-            syncer.Sync();
+            int fileCount = syncer.CacheAllPaths();
+
+            toolStripProgressBar.Maximum = fileCount;
+            toolStripProgressBar.Step = 1;
+
+            syncer.Sync(toolStripProgressBar);
 
             if (syncer.originFiles != null)
             {

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+using System.Windows.Forms;
+
 using System.Security.Cryptography;
 
 namespace ProjectSync
@@ -91,6 +93,7 @@ namespace ProjectSync
             return false;
         }
 
+        [Obsolete]
         void CacheChanges()
         {
             int pathStartIndex = originPath.Length + 1;
@@ -152,9 +155,30 @@ namespace ProjectSync
             }
         }
 
-        public string[] GetPathsThatChanged()
+        public int CacheAllPaths()
         {
-            CacheChanges();
+            originFiles = Directory.GetFiles(originPath, "*", SearchOption.AllDirectories);
+
+            List<string> files = new List<string>();
+
+            for (int i = 0; i < originFiles.Length; i++)
+            {
+                string filePath = originFiles[i];
+
+                if (IsExcluded(filePath))
+                    continue;
+
+                files.Add(filePath);
+            }
+
+            originFiles = files.ToArray();
+
+            return originFiles.Length;
+        }
+
+        public string[] GetPathsThatChanged(ToolStripProgressBar bar)
+        {
+            //CacheChanges();
 
             List<string> changedPaths = new List<string>();
 
@@ -180,6 +204,8 @@ namespace ProjectSync
 
                     //Console.WriteLine(System.Text.Encoding.Default.GetString(hash));
                 }
+
+                bar.PerformStep();
             }
 
             return changedPaths.ToArray();
@@ -199,7 +225,7 @@ namespace ProjectSync
 
         public List<string> log = new List<string>();
 
-        public void Sync()
+        public void Sync(ToolStripProgressBar bar)
         {
             log.Clear();
 
@@ -207,7 +233,7 @@ namespace ProjectSync
             if (!Directory.Exists(targetPath)) { log.Add("Target folder does not exist"); return; }
             if (!hasWriteAccessToFolder(targetPath)) { log.Add("You do not have write permission"); return; }
 
-            string[] changedPaths = GetPathsThatChanged();
+            string[] changedPaths = GetPathsThatChanged(bar);
 
             if (changedPaths.Length == 0)
             {
