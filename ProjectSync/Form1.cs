@@ -252,51 +252,46 @@ namespace ProjectSync
                 // Start the asynchronous operation.
                 UpdateSyncerParameters();
                 workerCount = syncer.CacheAllPaths();
+                progressBar.Step = 1;
                 progressBar.Maximum = workerCount;
-                func = syncer.Sync;
+                //func = syncer.QueryChanges;
 
                 backgroundWorker1.RunWorkerAsync();
             }
         }
 
-        System.Threading.ThreadStart func;
+        //System.Threading.ThreadStart func;
+        string cur;
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
+            int i = 0;
+            foreach (var path in syncer.FindChangeAndSync())
+            {
+                cur = path;
+                worker.ReportProgress(i);
+                i++;
+                System.Threading.Thread.Sleep(1);
+            }
+
+            /*
             System.Threading.Thread thread = new System.Threading.Thread(func);
             thread.Start();
 
             while (thread.IsAlive)
             {
                 worker.ReportProgress(syncer.progress);
-                System.Threading.Thread.Sleep(1);
-            }
-            
-            /*
-            for (int i = 1; i <= workerCount; i++)
-            {
-                if (worker.CancellationPending == true)
-                {
-                    e.Cancel = true;
-                    break;
-                }
-                else
-                {
-                    // Perform a time consuming operation and report progress.
-                    //System.Threading.Thread.Sleep(500);
-                    syncer.StepPathsThatChanged();
-                    System.Threading.Thread.Sleep(1);
-                    worker.ReportProgress(i);
-                }
             }*/
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.PerformStep();
+            outputBox.Items.Add(cur);
+            progressBar.Increment(e.ProgressPercentage);
             //progressBar.Value = e.ProgressPercentage;
+            Console.WriteLine("Prog: " + e.ProgressPercentage);
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

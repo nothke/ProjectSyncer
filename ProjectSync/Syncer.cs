@@ -182,6 +182,7 @@ namespace ProjectSync
         public void ResetAsync()
         {
             asyncstep = 0;
+            progress = 0;
             changedPathsAsync.Clear();
         }
 
@@ -218,6 +219,113 @@ namespace ProjectSync
             Console.WriteLine(trimmed);
         }
 
+        public void QueryChanges()
+        {
+            GetPathsThatChanged();
+        }
+
+        public IEnumerable<string> FindChangeAndSync()
+        {
+            //List<string> changedPaths = new List<string>();
+
+            yield return "Detecting changes..";
+            foreach (var str in GetPathsThatChange())
+            {
+                yield return "Change: " + TrimOrigin(str);
+            }
+
+            if (changedPathsAsync.Count == 0)
+            {
+                yield return "No changes found";
+                yield break;
+            }
+
+            yield return "Copying files..";
+            string[] changedPathsArray = changedPathsAsync.ToArray();
+
+            foreach (var str in SyncCo(changedPathsArray))
+            {
+                yield return "Copied: " + str;
+            }
+        }
+
+        public IEnumerable<string> GetPathsThatChange()
+        {
+            changedPathsAsync.Clear();
+
+            for (int i = 0; i < originFiles.Length; i++)
+            {
+                string source = originFiles[i];
+                string trimmed = TrimOrigin(originFiles[i]);
+                string destination = Path.Combine(targetPath, trimmed);
+
+                bool exists = File.Exists(destination);
+
+                if (!exists) // if it doesn't exist just overwrite it
+                {
+                    changedPathsAsync.Add(source);
+                    yield return source;
+                }
+                else // instead compare hashes
+                {
+                    byte[] sourceHash = GetFileSHA1(source);
+                    byte[] destinationHash = GetFileSHA1(destination);
+
+                    if (!sourceHash.SequenceEqual(destinationHash))
+                    {
+                        changedPathsAsync.Add(source);
+                        yield return source;
+                    }
+                    else
+                    {
+                    }
+
+                    yield return source;
+                    Console.WriteLine(source);
+
+                    //if (!change)
+                      //  Form1.progressMax = 0;
+                }
+
+
+
+
+                Console.WriteLine("Do we see this? " + progress);
+                progress++;
+            }
+        }
+
+        public IEnumerable<string> SyncCo(string[] changedPaths)
+        {
+            if (!Directory.Exists(originPath)) { log.Add("Origin folder does not exist"); yield break; }
+            if (!Directory.Exists(targetPath)) { log.Add("Target folder does not exist"); yield break; }
+            if (!hasWriteAccessToFolder(targetPath)) { log.Add("You do not have write permission"); yield break; }
+
+            if (changedPaths.Length == 0)
+            {
+                yield break;
+            }
+
+            for (int i = 0; i < changedPaths.Length; i++)
+            {
+                string source = changedPaths[i];
+                string trimmed = TrimOrigin(source);
+                string destination = Path.Combine(targetPath, trimmed);
+
+                string dir = Path.GetDirectoryName(destination);
+
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                Console.WriteLine("Attempting to copy " + source + " to " + destination);
+                File.Copy(source, destination, true);
+                progress++;
+                yield return source;
+            }
+
+            lastChangedFiles = changedPaths;
+        }
+
         public string[] GetPathsThatChanged()
         {
             //CacheChanges();
@@ -246,6 +354,9 @@ namespace ProjectSync
 
                     //Console.WriteLine(System.Text.Encoding.Default.GetString(hash));
                 }
+
+                Console.WriteLine(progress);
+                progress++;
             }
 
             return changedPaths.ToArray();
@@ -265,8 +376,7 @@ namespace ProjectSync
 
         public List<string> log = new List<string>();
 
-        int _progress = 0;
-        public int progress { get { return _progress; } }
+        public int progress = 0;
 
         public void Sync()
         {
@@ -299,7 +409,7 @@ namespace ProjectSync
                 File.Copy(source, destination, true);
                 log.Add(trimmed);
 
-                _progress++;
+                progress++;
             }
 
             lastChangedFiles = changedPaths;
