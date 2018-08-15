@@ -38,7 +38,7 @@
             this.label_origin = new System.Windows.Forms.Label();
             this.textBox_bypassExtensions = new System.Windows.Forms.TextBox();
             this.label_dontsync = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.outputBox = new System.Windows.Forms.ListBox();
             this.button_saveProjectFile = new System.Windows.Forms.Button();
             this.button_detect = new System.Windows.Forms.Button();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -46,6 +46,7 @@
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_bypassPrefixes = new System.Windows.Forms.TextBox();
+            this.button_clearLog = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -128,14 +129,14 @@
             this.label_dontsync.TabIndex = 9;
             this.label_dontsync.Text = "Bypass ext";
             // 
-            // listBox1
+            // outputBox
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(8, 232);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(368, 180);
-            this.listBox1.TabIndex = 12;
+            this.outputBox.FormattingEnabled = true;
+            this.outputBox.ItemHeight = 16;
+            this.outputBox.Location = new System.Drawing.Point(8, 232);
+            this.outputBox.Name = "outputBox";
+            this.outputBox.Size = new System.Drawing.Size(368, 180);
+            this.outputBox.TabIndex = 12;
             // 
             // button_saveProjectFile
             // 
@@ -199,17 +200,28 @@
             this.textBox_bypassPrefixes.TabIndex = 17;
             this.textBox_bypassPrefixes.Text = "_";
             // 
+            // button_clearLog
+            // 
+            this.button_clearLog.Location = new System.Drawing.Point(8, 200);
+            this.button_clearLog.Name = "button_clearLog";
+            this.button_clearLog.Size = new System.Drawing.Size(104, 31);
+            this.button_clearLog.TabIndex = 18;
+            this.button_clearLog.Text = "Clear Log";
+            this.button_clearLog.UseVisualStyleBackColor = true;
+            this.button_clearLog.Click += new System.EventHandler(this.button_clearLog_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 450);
+            this.Controls.Add(this.button_clearLog);
             this.Controls.Add(this.textBox_bypassPrefixes);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.button_detect);
             this.Controls.Add(this.button_saveProjectFile);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.outputBox);
             this.Controls.Add(this.label_dontsync);
             this.Controls.Add(this.textBox_bypassExtensions);
             this.Controls.Add(this.label_origin);
@@ -243,7 +255,7 @@
         private System.Windows.Forms.Label label_origin;
         private System.Windows.Forms.TextBox textBox_bypassExtensions;
         private System.Windows.Forms.Label label_dontsync;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox outputBox;
         private System.Windows.Forms.Button button_saveProjectFile;
         private System.Windows.Forms.Button button_detect;
         private System.Windows.Forms.StatusStrip statusStrip;
@@ -251,6 +263,7 @@
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox_bypassPrefixes;
+        private System.Windows.Forms.Button button_clearLog;
     }
 }
 

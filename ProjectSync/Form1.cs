@@ -184,7 +184,9 @@ namespace ProjectSync
 
             if (!nothingToSync)
             {
-                listBox1.Items.AddRange(changedPaths);
+                outputBox.Items.Add("..");
+                outputBox.Items.AddRange(changedPaths);
+
 
                 Log("Found " + changedPaths.Length + " changed files");
             }
@@ -206,8 +208,11 @@ namespace ProjectSync
             if (syncer.originFiles != null)
             {
                 //listBox1.Items.Clear();
-                listBox1.Items.Add("Synced files:");
-                listBox1.Items.AddRange(syncer.GetShortNames());
+                outputBox.Items.Add("..");
+                outputBox.Items.Add("Synced files:");
+                outputBox.Items.Add("..");
+                outputBox.Items.AddRange(syncer.GetShortNames());
+                OutputBoxSelectLast();
             }
         }
 
@@ -230,12 +235,22 @@ namespace ProjectSync
         void Log(string str)
         {
             toolStripStatusLabel.Text = str;
-            listBox1.Items.Add(str);
-            listBox1.SelectedIndex = listBox1.Items.Count - 1;
+            outputBox.Items.Add(str);
+            OutputBoxSelectLast();
+        }
+
+        void OutputBoxSelectLast()
+        {
+            outputBox.SelectedIndex = outputBox.Items.Count - 1;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+        }
+
+        private void button_clearLog_Click(object sender, EventArgs e)
+        {
+            outputBox.Items.Clear();
         }
     }
 }
