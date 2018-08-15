@@ -25,6 +25,9 @@ namespace ProjectSync
             DragEnter += new DragEventHandler(Form1_DragEnter);
             DragDrop += new DragEventHandler(Form1_DragDrop);
 
+            backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
+
             if (!string.IsNullOrEmpty(path))
                 LoadProjectFile(path);
             else
@@ -244,17 +247,14 @@ namespace ProjectSync
 
         private void testbackgroundWorker_Click(object sender, EventArgs e)
         {
-            backgroundWorker1.WorkerReportsProgress = true;
-            backgroundWorker1.WorkerSupportsCancellation = true;
-
             if (backgroundWorker1.IsBusy != true)
             {
-                // Start the asynchronous operation.
                 UpdateSyncerParameters();
+
+                process = syncer.FindChange();
                 workerCount = syncer.CacheAllPaths();
                 progressBar.Step = 1;
                 progressBar.Maximum = workerCount;
-                //func = syncer.QueryChanges;
 
                 backgroundWorker1.RunWorkerAsync();
             }
@@ -262,15 +262,16 @@ namespace ProjectSync
 
         //System.Threading.ThreadStart func;
         string cur;
+        IEnumerable<string> process;
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
             int i = 0;
-            foreach (var path in syncer.FindChangeAndSync())
+            foreach (var str in process)
             {
-                cur = path;
+                cur = str;
                 worker.ReportProgress(i);
                 i++;
                 System.Threading.Thread.Sleep(1);
@@ -289,6 +290,7 @@ namespace ProjectSync
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             outputBox.Items.Add(cur);
+            OutputBoxSelectLast();
             progressBar.Increment(e.ProgressPercentage);
             //progressBar.Value = e.ProgressPercentage;
             Console.WriteLine("Prog: " + e.ProgressPercentage);

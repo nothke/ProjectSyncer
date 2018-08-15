@@ -93,29 +93,6 @@ namespace ProjectSync
             return false;
         }
 
-        [Obsolete]
-        void CacheChanges()
-        {
-            int pathStartIndex = originPath.Length + 1;
-
-            originFiles = Directory.GetFiles(originPath, "*", SearchOption.AllDirectories);
-            //originFiles = Directory.GetFileSystemEntries(originPath, "*", SearchOption.AllDirectories);
-
-            List<string> files = new List<string>();
-
-            for (int i = 0; i < originFiles.Length; i++)
-            {
-                string filePath = originFiles[i];
-
-                if (IsExcluded(filePath))
-                    continue;
-
-                files.Add(filePath);
-            }
-
-            originFiles = files.ToArray();
-        }
-
         public void SetExcludedExtensions(string rawext)
         {
             string[] exts = rawext.Split(',');
@@ -222,6 +199,32 @@ namespace ProjectSync
         public void QueryChanges()
         {
             GetPathsThatChanged();
+        }
+
+        public IEnumerable<string> FindChange()
+        {
+            yield return "Detecting changes..";
+            foreach (var str in GetPathsThatChange())
+            {
+                yield return "Detecting: " + TrimOrigin(str);
+            }
+
+            if (changedPathsAsync.Count == 0)
+            {
+                yield return "No changes found";
+            }
+            else
+            {
+                yield return "...";
+                yield return "Changes: ";
+
+                for (int i = 0; i < changedPathsAsync.Count; i++)
+                {
+                    yield return changedPathsAsync[i];
+                }
+
+                yield return "Found " + changedPathsAsync.Count + " changes";
+            }
         }
 
         public IEnumerable<string> FindChangeAndSync()
