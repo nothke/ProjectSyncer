@@ -44,13 +44,15 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_target
             // 
             this.label_target.AutoSize = true;
-            this.label_target.Location = new System.Drawing.Point(12, 37);
+            this.label_target.Location = new System.Drawing.Point(8, 40);
             this.label_target.Name = "label_target";
             this.label_target.Size = new System.Drawing.Size(50, 17);
             this.label_target.TabIndex = 0;
@@ -58,9 +60,9 @@
             // 
             // button_browseTargetFolder
             // 
-            this.button_browseTargetFolder.Location = new System.Drawing.Point(336, 34);
+            this.button_browseTargetFolder.Location = new System.Drawing.Point(344, 40);
             this.button_browseTargetFolder.Name = "button_browseTargetFolder";
-            this.button_browseTargetFolder.Size = new System.Drawing.Size(39, 23);
+            this.button_browseTargetFolder.Size = new System.Drawing.Size(32, 24);
             this.button_browseTargetFolder.TabIndex = 1;
             this.button_browseTargetFolder.Text = "...";
             this.button_browseTargetFolder.UseVisualStyleBackColor = true;
@@ -68,16 +70,16 @@
             // 
             // textBox_targetFolder
             // 
-            this.textBox_targetFolder.Location = new System.Drawing.Point(68, 34);
+            this.textBox_targetFolder.Location = new System.Drawing.Point(64, 40);
             this.textBox_targetFolder.Name = "textBox_targetFolder";
-            this.textBox_targetFolder.Size = new System.Drawing.Size(262, 22);
+            this.textBox_targetFolder.Size = new System.Drawing.Size(272, 22);
             this.textBox_targetFolder.TabIndex = 3;
             // 
             // button_sync
             // 
-            this.button_sync.Location = new System.Drawing.Point(68, 119);
+            this.button_sync.Location = new System.Drawing.Point(80, 128);
             this.button_sync.Name = "button_sync";
-            this.button_sync.Size = new System.Drawing.Size(307, 55);
+            this.button_sync.Size = new System.Drawing.Size(296, 55);
             this.button_sync.TabIndex = 4;
             this.button_sync.Text = "Sync!";
             this.button_sync.UseVisualStyleBackColor = true;
@@ -85,16 +87,16 @@
             // 
             // textBox_originFolder
             // 
-            this.textBox_originFolder.Location = new System.Drawing.Point(68, 6);
+            this.textBox_originFolder.Location = new System.Drawing.Point(64, 8);
             this.textBox_originFolder.Name = "textBox_originFolder";
-            this.textBox_originFolder.Size = new System.Drawing.Size(262, 22);
+            this.textBox_originFolder.Size = new System.Drawing.Size(272, 22);
             this.textBox_originFolder.TabIndex = 7;
             // 
             // button_browseOriginFolder
             // 
-            this.button_browseOriginFolder.Location = new System.Drawing.Point(336, 6);
+            this.button_browseOriginFolder.Location = new System.Drawing.Point(344, 8);
             this.button_browseOriginFolder.Name = "button_browseOriginFolder";
-            this.button_browseOriginFolder.Size = new System.Drawing.Size(39, 24);
+            this.button_browseOriginFolder.Size = new System.Drawing.Size(32, 24);
             this.button_browseOriginFolder.TabIndex = 6;
             this.button_browseOriginFolder.Text = "...";
             this.button_browseOriginFolder.UseVisualStyleBackColor = true;
@@ -103,7 +105,7 @@
             // label_origin
             // 
             this.label_origin.AutoSize = true;
-            this.label_origin.Location = new System.Drawing.Point(12, 9);
+            this.label_origin.Location = new System.Drawing.Point(8, 8);
             this.label_origin.Name = "label_origin";
             this.label_origin.Size = new System.Drawing.Size(46, 17);
             this.label_origin.TabIndex = 5;
@@ -111,45 +113,45 @@
             // 
             // textBox_bypassExtensions
             // 
-            this.textBox_bypassExtensions.Location = new System.Drawing.Point(92, 63);
+            this.textBox_bypassExtensions.Location = new System.Drawing.Point(104, 72);
             this.textBox_bypassExtensions.Name = "textBox_bypassExtensions";
-            this.textBox_bypassExtensions.Size = new System.Drawing.Size(262, 22);
+            this.textBox_bypassExtensions.Size = new System.Drawing.Size(272, 22);
             this.textBox_bypassExtensions.TabIndex = 8;
             this.textBox_bypassExtensions.Text = "psd, tiff, raw";
             // 
             // label_dontsync
             // 
             this.label_dontsync.AutoSize = true;
-            this.label_dontsync.Location = new System.Drawing.Point(12, 65);
+            this.label_dontsync.Location = new System.Drawing.Point(8, 72);
             this.label_dontsync.Name = "label_dontsync";
-            this.label_dontsync.Size = new System.Drawing.Size(74, 17);
+            this.label_dontsync.Size = new System.Drawing.Size(76, 17);
             this.label_dontsync.TabIndex = 9;
-            this.label_dontsync.Text = "Don\'t sync";
+            this.label_dontsync.Text = "Bypass ext";
             // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(12, 261);
+            this.listBox1.Location = new System.Drawing.Point(8, 232);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(357, 164);
+            this.listBox1.Size = new System.Drawing.Size(368, 180);
             this.listBox1.TabIndex = 12;
             // 
             // button_saveProjectFile
             // 
             this.button_saveProjectFile.Image = global::ProjectSync.Properties.Resources._1f914;
-            this.button_saveProjectFile.Location = new System.Drawing.Point(336, 206);
+            this.button_saveProjectFile.Location = new System.Drawing.Point(336, 184);
             this.button_saveProjectFile.Name = "button_saveProjectFile";
-            this.button_saveProjectFile.Size = new System.Drawing.Size(36, 32);
+            this.button_saveProjectFile.Size = new System.Drawing.Size(40, 32);
             this.button_saveProjectFile.TabIndex = 13;
             this.button_saveProjectFile.UseVisualStyleBackColor = true;
             this.button_saveProjectFile.Click += new System.EventHandler(this.button_saveProjectFile_Click);
             // 
             // button_detect
             // 
-            this.button_detect.Location = new System.Drawing.Point(11, 119);
+            this.button_detect.Location = new System.Drawing.Point(8, 128);
             this.button_detect.Name = "button_detect";
-            this.button_detect.Size = new System.Drawing.Size(60, 55);
+            this.button_detect.Size = new System.Drawing.Size(72, 55);
             this.button_detect.TabIndex = 14;
             this.button_detect.Text = "Detect";
             this.button_detect.UseVisualStyleBackColor = true;
@@ -180,11 +182,30 @@
             this.toolStripProgressBar.Name = "toolStripProgressBar";
             this.toolStripProgressBar.Size = new System.Drawing.Size(100, 18);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 104);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(92, 17);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "Bypass prefix";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(104, 104);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(272, 22);
+            this.textBox1.TabIndex = 17;
+            this.textBox1.Text = "_";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 450);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.button_detect);
             this.Controls.Add(this.button_saveProjectFile);
@@ -227,6 +248,8 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

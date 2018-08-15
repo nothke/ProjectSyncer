@@ -122,18 +122,17 @@ namespace ProjectSync
 
         private void button_browseTargetFolder_Click(object sender, EventArgs e)
         {
+            //folderBrowserDialog_target.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            folderBrowserDialog_target.SelectedPath = textBox_targetFolder.Text;
             if (folderBrowserDialog_target.ShowDialog() == DialogResult.OK)
-            {
                 textBox_targetFolder.Text = folderBrowserDialog_target.SelectedPath;
-            }
         }
 
         private void button_browseOriginFolder_Click(object sender, EventArgs e)
         {
+            folderBrowserDialog_target.SelectedPath = textBox_originFolder.Text;
             if (folderBrowserDialog_target.ShowDialog() == DialogResult.OK)
-            {
                 textBox_originFolder.Text = folderBrowserDialog_target.SelectedPath;
-            }
         }
 
         void ApplyPathsFromUIToSyncer()
