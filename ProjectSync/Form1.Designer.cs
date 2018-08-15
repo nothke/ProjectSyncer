@@ -43,10 +43,12 @@
             this.button_detect = new System.Windows.Forms.Button();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_bypassPrefixes = new System.Windows.Forms.TextBox();
             this.button_clearLog = new System.Windows.Forms.Button();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.testbackgroundWorker = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -163,7 +165,7 @@
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel,
-            this.toolStripProgressBar});
+            this.progressBar});
             this.statusStrip.Location = new System.Drawing.Point(0, 426);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(384, 24);
@@ -177,11 +179,11 @@
             this.toolStripStatusLabel.Size = new System.Drawing.Size(260, 19);
             this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toolStripProgressBar
+            // progressBar
             // 
-            this.toolStripProgressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripProgressBar.Name = "toolStripProgressBar";
-            this.toolStripProgressBar.Size = new System.Drawing.Size(100, 18);
+            this.progressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(100, 18);
             // 
             // label1
             // 
@@ -210,11 +212,28 @@
             this.button_clearLog.UseVisualStyleBackColor = true;
             this.button_clearLog.Click += new System.EventHandler(this.button_clearLog_Click);
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
+            // testbackgroundWorker
+            // 
+            this.testbackgroundWorker.Location = new System.Drawing.Point(152, 192);
+            this.testbackgroundWorker.Name = "testbackgroundWorker";
+            this.testbackgroundWorker.Size = new System.Drawing.Size(75, 23);
+            this.testbackgroundWorker.TabIndex = 19;
+            this.testbackgroundWorker.Text = "button1";
+            this.testbackgroundWorker.UseVisualStyleBackColor = true;
+            this.testbackgroundWorker.Click += new System.EventHandler(this.testbackgroundWorker_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 450);
+            this.Controls.Add(this.testbackgroundWorker);
             this.Controls.Add(this.button_clearLog);
             this.Controls.Add(this.textBox_bypassPrefixes);
             this.Controls.Add(this.label1);
@@ -259,10 +278,12 @@
         private System.Windows.Forms.Button button_detect;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
+        private System.Windows.Forms.ToolStripProgressBar progressBar;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox_bypassPrefixes;
         private System.Windows.Forms.Button button_clearLog;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button testbackgroundWorker;
     }
 }
 

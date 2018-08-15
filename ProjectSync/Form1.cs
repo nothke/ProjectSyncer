@@ -145,7 +145,7 @@ namespace ProjectSync
         }
 
         #endregion
-        
+
         private void button_browseTargetFolder_Click(object sender, EventArgs e)
         {
             //folderBrowserDialog_target.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
@@ -178,9 +178,10 @@ namespace ProjectSync
         {
             UpdateSyncerParameters();
 
-            int fileCount = syncer.CacheAllPaths();
+            progressBar.Maximum = syncer.CacheAllPaths();
+            progressBar.Step = 1;
 
-            string[] changedPaths = syncer.GetPathsThatChanged(toolStripProgressBar);
+            string[] changedPaths = syncer.GetPathsThatChanged(progressBar);
             syncer.TrimOriginFolderFromPaths(changedPaths);
 
             bool nothingToSync = syncer.originFiles == null || syncer.originFiles.Length == 0;
@@ -198,6 +199,8 @@ namespace ProjectSync
             {
                 Log("Nothing to Sync");
             }
+            
+            //progressBar.Value = 0;
         }
 
         // SYNC!
@@ -205,12 +208,10 @@ namespace ProjectSync
         {
             UpdateSyncerParameters();
 
-            int fileCount = syncer.CacheAllPaths();
+            progressBar.Maximum = syncer.CacheAllPaths();
+            progressBar.Step = 1;
 
-            toolStripProgressBar.Maximum = fileCount;
-            toolStripProgressBar.Step = 1;
-
-            syncer.Sync(toolStripProgressBar);
+            syncer.Sync(progressBar);
 
             if (syncer.originFiles != null)
             {
@@ -219,6 +220,8 @@ namespace ProjectSync
                 outputBox.Items.AddRange(syncer.log.ToArray());
                 OutputBoxSelectLast();
             }
+
+            //progressBar.Value = 0;
         }
 
         // Save project file dialogue
@@ -236,6 +239,73 @@ namespace ProjectSync
                 SaveProjectFile(saveFileDialog.FileName);
             }
         }
+
+        int workerCount;
+
+        private void testbackgroundWorker_Click(object sender, EventArgs e)
+        {
+            backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
+
+            if (backgroundWorker1.IsBusy != true)
+            {
+                // Start the asynchronous operation.
+                UpdateSyncerParameters();
+                workerCount = syncer.CacheAllPaths();
+                progressBar.Maximum = workerCount;
+
+                backgroundWorker1.RunWorkerAsync();
+            }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            
+            for (int i = 1; i <= workerCount; i++)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    // Perform a time consuming operation and report progress.
+                    //System.Threading.Thread.Sleep(500);
+                    syncer.StepPathsThatChanged();
+                    System.Threading.Thread.Sleep(1);
+                    worker.ReportProgress(i);
+                }
+            }
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar.PerformStep();
+            //progressBar.Value = e.ProgressPercentage;
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled == true)
+            {
+                Log("Canceled!");
+            }
+            else if (e.Error != null)
+            {
+                Log("Error: " + e.Error.Message);
+            }
+            else
+            {
+                Log("Done!");
+            }
+
+            syncer.ResetAsync();
+            progressBar.Value = 0;
+        }
+
+
 
         #region Log
 
@@ -257,5 +327,7 @@ namespace ProjectSync
         }
 
         #endregion
+
+
     }
 }

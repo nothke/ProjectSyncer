@@ -176,6 +176,48 @@ namespace ProjectSync
             return originFiles.Length;
         }
 
+        int asyncstep;
+        List<string> changedPathsAsync = new List<string>();
+
+        public void ResetAsync()
+        {
+            asyncstep = 0;
+            changedPathsAsync.Clear();
+        }
+
+        public void StepPathsThatChanged()
+        {
+            if (asyncstep >= originFiles.Length)
+                return;
+
+            if (asyncstep == 0)
+                changedPathsAsync.Clear();
+
+            string source = originFiles[asyncstep];
+            string trimmed = TrimOrigin(source);
+            string destination = Path.Combine(targetPath, trimmed);
+
+            bool exists = File.Exists(destination);
+
+            if (!exists) // if it doesn't exist just overwrite it
+            {
+                changedPathsAsync.Add(source);
+            }
+            else // instead compare hashes
+            {
+                byte[] sourceHash = GetFileSHA1(source);
+                byte[] destinationHash = GetFileSHA1(destination);
+
+                if (!sourceHash.SequenceEqual(destinationHash))
+                    changedPathsAsync.Add(source);
+
+                //Console.WriteLine(System.Text.Encoding.Default.GetString(hash));
+            }
+
+            asyncstep++;
+            Console.WriteLine(trimmed);
+        }
+
         public string[] GetPathsThatChanged(ToolStripProgressBar bar)
         {
             //CacheChanges();
