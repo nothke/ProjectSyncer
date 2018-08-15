@@ -92,10 +92,11 @@ namespace ProjectSync
             textBox_originFolder.Text = root["origin_path"].InnerText;
             textBox_targetFolder.Text = root["target_path"].InnerText;
             textBox_bypassExtensions.Text = root["bypass_extensions"].InnerText;
+            textBox_bypassPrefixes.Text = root["bypass_prefixes"].InnerText;
 
             SetProjectFilePath(path);
         }
-        
+
         void SaveProjectFile(string path)
         {
             XmlDocument xml = new XmlDocument();
@@ -106,6 +107,7 @@ namespace ProjectSync
             XMLAppend(xml, root, "origin_path", textBox_originFolder.Text);
             XMLAppend(xml, root, "target_path", textBox_targetFolder.Text);
             XMLAppend(xml, root, "bypass_extensions", textBox_bypassExtensions.Text);
+            XMLAppend(xml, root, "bypass_prefixes", textBox_bypassPrefixes.Text);
 
             xml.Save(path);
 
@@ -149,6 +151,7 @@ namespace ProjectSync
             ApplyPathsFromUIToSyncer();
 
             syncer.SetExcludedExtensions(textBox_bypassExtensions.Text);
+            syncer.SetExcudedPrefixes(textBox_bypassPrefixes.Text);
         }
 
         // Detect
@@ -174,7 +177,7 @@ namespace ProjectSync
                 Log("Nothing to Sync");
             }
         }
-        
+
         // SYNC!
         private void button_sync_Click(object sender, EventArgs e)
         {

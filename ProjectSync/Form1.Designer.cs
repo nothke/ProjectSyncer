@@ -45,7 +45,7 @@
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_bypassPrefixes = new System.Windows.Forms.TextBox();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -140,9 +140,9 @@
             // button_saveProjectFile
             // 
             this.button_saveProjectFile.Image = global::ProjectSync.Properties.Resources._1f914;
-            this.button_saveProjectFile.Location = new System.Drawing.Point(336, 184);
+            this.button_saveProjectFile.Location = new System.Drawing.Point(344, 192);
             this.button_saveProjectFile.Name = "button_saveProjectFile";
-            this.button_saveProjectFile.Size = new System.Drawing.Size(40, 32);
+            this.button_saveProjectFile.Size = new System.Drawing.Size(32, 32);
             this.button_saveProjectFile.TabIndex = 13;
             this.button_saveProjectFile.UseVisualStyleBackColor = true;
             this.button_saveProjectFile.Click += new System.EventHandler(this.button_saveProjectFile_Click);
@@ -191,20 +191,20 @@
             this.label1.TabIndex = 16;
             this.label1.Text = "Bypass prefix";
             // 
-            // textBox1
+            // textBox_bypassPrefixes
             // 
-            this.textBox1.Location = new System.Drawing.Point(104, 104);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(272, 22);
-            this.textBox1.TabIndex = 17;
-            this.textBox1.Text = "_";
+            this.textBox_bypassPrefixes.Location = new System.Drawing.Point(104, 104);
+            this.textBox_bypassPrefixes.Name = "textBox_bypassPrefixes";
+            this.textBox_bypassPrefixes.Size = new System.Drawing.Size(272, 22);
+            this.textBox_bypassPrefixes.TabIndex = 17;
+            this.textBox_bypassPrefixes.Text = "_";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 450);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox_bypassPrefixes);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.button_detect);
@@ -249,7 +249,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_bypassPrefixes;
     }
 }
 

@@ -49,6 +49,11 @@ namespace ProjectSync
 
         bool IsExcluded(string path)
         {
+            return IsExcludedByExtension(path) || IsExcludedByPrefix(path);
+        }
+
+        bool IsExcludedByExtension(string path)
+        {
             if (excludedExtensions == null)
                 return false;
 
@@ -61,6 +66,22 @@ namespace ProjectSync
                 {
                     return true;
                 }
+            }
+
+            return false;
+        }
+        
+        bool IsExcludedByPrefix(string path)
+        {
+            if (excludedPrefixes == null)
+                return false;
+
+            string fileName = Path.GetFileName(path);
+
+            for (int p = 0; p < excludedPrefixes.Length; p++)
+            {
+                if (fileName.StartsWith(excludedPrefixes[p]))
+                    return true;
             }
 
             return false;
@@ -98,6 +119,18 @@ namespace ProjectSync
             }
 
             excludedExtensions = exts;
+        }
+
+        public void SetExcudedPrefixes(string rawPrefixes)
+        {
+            string[] prefixes = rawPrefixes.Split(',');
+
+            for (int i = 0; i < prefixes.Length; i++)
+            {
+                prefixes[i] = prefixes[i].Trim();
+            }
+
+            excludedPrefixes = prefixes;
         }
 
         private bool hasWriteAccessToFolder(string folderPath)
