@@ -33,9 +33,6 @@ namespace ProjectSync
                 Log("Loaded last project: " + Path.GetFileName(projectFilePath));
             }
 
-            //textBox_originFolder.Text = Properties.Settings.Default.originPath;
-            //textBox_targetFolder.Text = Properties.Settings.Default.targetPath;
-
             syncer = new Syncer();
         }
 
@@ -98,9 +95,7 @@ namespace ProjectSync
 
             SetProjectFilePath(path);
         }
-
-
-
+        
         void SaveProjectFile(string path)
         {
             XmlDocument xml = new XmlDocument();
@@ -141,17 +136,6 @@ namespace ProjectSync
             }
         }
 
-        [Obsolete]
-        void SavePathsToUserData()
-        {
-            string origin = textBox_originFolder.Text;
-            string target = textBox_targetFolder.Text;
-
-            //Properties.Settings.Default.originPath = origin;
-            //Properties.Settings.Default.targetPath = target;
-            //Properties.Settings.Default.Save();
-        }
-
         void ApplyPathsFromUIToSyncer()
         {
             string origin = textBox_originFolder.Text;
@@ -168,6 +152,7 @@ namespace ProjectSync
             syncer.SetExcludedExtensions(textBox_bypassExtensions.Text);
         }
 
+        // Detect
         private void button_detect_Click(object sender, EventArgs e)
         {
             UpdateSyncer();
@@ -191,6 +176,7 @@ namespace ProjectSync
             }
         }
         
+        // SYNC!
         private void button_sync_Click(object sender, EventArgs e)
         {
             ApplyPathsFromUIToSyncer();
@@ -210,7 +196,6 @@ namespace ProjectSync
         private void button_saveProjectFile_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //saveFileDialog1.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
             saveFileDialog.Filter = "Project Syncer file|*.syncer";
             saveFileDialog.Title = "Save a Project Syncer file";
             saveFileDialog.InitialDirectory = syncer.originPath;
@@ -220,40 +205,11 @@ namespace ProjectSync
             if (saveFileDialog.FileName != "")
             {
                 SaveProjectFile(saveFileDialog.FileName);
-
-                // Saves the Image via a FileStream created by the OpenFile method.  
-                //System.IO.FileStream fs =
-                //   (System.IO.FileStream)saveFileDialog.OpenFile();
-
-
-
-                // Saves the Image in the appropriate ImageFormat based upon the  
-                // File type selected in the dialog box.  
-                // NOTE that the FilterIndex property is one-based.  
-                /*
-                switch (saveFileDialog1.FilterIndex)
-                {
-                    case 1:
-                        this.button2.Image.Save(fs,
-                           System.Drawing.Imaging.ImageFormat.Jpeg);
-                        break;
-
-                    case 2:
-                        this.button2.Image.Save(fs,
-                           System.Drawing.Imaging.ImageFormat.Bmp);
-                        break;
-
-                    case 3:
-                        this.button2.Image.Save(fs,
-                           System.Drawing.Imaging.ImageFormat.Gif);
-                        break;
-                }*/
             }
         }
 
         void Log(string str)
         {
-            //label_error.Text = str;
             toolStripStatusLabel.Text = str;
         }
     }
