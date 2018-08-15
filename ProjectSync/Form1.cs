@@ -17,7 +17,7 @@ namespace ProjectSync
         public Syncer syncer;
         string projectFilePath;
 
-        public Form1()
+        public Form1(string path)
         {
             InitializeComponent();
 
@@ -25,22 +25,29 @@ namespace ProjectSync
             this.DragEnter += new DragEventHandler(Form1_DragEnter);
             this.DragDrop += new DragEventHandler(Form1_DragDrop);
 
-            projectFilePath = Properties.Settings.Default.lastProjectFile;
-
-            if (!string.IsNullOrEmpty(projectFilePath))
-            {
-                if (File.Exists(projectFilePath))
-                {
-                    LoadProjectFile(projectFilePath);
-                    Log("Loaded last project: " + Path.GetFileName(projectFilePath));
-                }
-                else
-                {
-                    Log("Last project not found");
-                }
-            }
+            if (!string.IsNullOrEmpty(path))
+                LoadProjectFile(path);
+            else
+                LoadLastProjectFile();
 
             syncer = new Syncer();
+        }
+
+        void LoadLastProjectFile()
+        {
+            projectFilePath = Properties.Settings.Default.lastProjectFile;
+
+            if (string.IsNullOrEmpty(projectFilePath)) return;
+
+            if (File.Exists(projectFilePath))
+            {
+                LoadProjectFile(projectFilePath);
+                Log("Loaded last project: " + Path.GetFileName(projectFilePath));
+            }
+            else
+            {
+                Log("Last project not found");
+            }
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
@@ -80,7 +87,7 @@ namespace ProjectSync
         {
             LoadProjectFile(filePath);
 
-            
+
         }
 
         void XMLAppend(XmlDocument doc, XmlElement appendTo, string key, string value)
