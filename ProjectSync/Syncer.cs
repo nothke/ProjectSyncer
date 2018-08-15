@@ -218,7 +218,7 @@ namespace ProjectSync
             Console.WriteLine(trimmed);
         }
 
-        public string[] GetPathsThatChanged(ToolStripProgressBar bar)
+        public string[] GetPathsThatChanged()
         {
             //CacheChanges();
 
@@ -246,8 +246,6 @@ namespace ProjectSync
 
                     //Console.WriteLine(System.Text.Encoding.Default.GetString(hash));
                 }
-
-                bar.PerformStep();
             }
 
             return changedPaths.ToArray();
@@ -267,7 +265,10 @@ namespace ProjectSync
 
         public List<string> log = new List<string>();
 
-        public void Sync(ToolStripProgressBar bar)
+        int _progress = 0;
+        public int progress { get { return _progress; } }
+
+        public void Sync()
         {
             log.Clear();
 
@@ -275,7 +276,7 @@ namespace ProjectSync
             if (!Directory.Exists(targetPath)) { log.Add("Target folder does not exist"); return; }
             if (!hasWriteAccessToFolder(targetPath)) { log.Add("You do not have write permission"); return; }
 
-            string[] changedPaths = GetPathsThatChanged(bar);
+            string[] changedPaths = GetPathsThatChanged();
 
             if (changedPaths.Length == 0)
             {
@@ -297,6 +298,8 @@ namespace ProjectSync
                 Console.WriteLine("Attempting to copy " + source + " to " + destination);
                 File.Copy(source, destination, true);
                 log.Add(trimmed);
+
+                _progress++;
             }
 
             lastChangedFiles = changedPaths;

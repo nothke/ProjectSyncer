@@ -181,7 +181,7 @@ namespace ProjectSync
             progressBar.Maximum = syncer.CacheAllPaths();
             progressBar.Step = 1;
 
-            string[] changedPaths = syncer.GetPathsThatChanged(progressBar);
+            string[] changedPaths = syncer.GetPathsThatChanged();
             syncer.TrimOriginFolderFromPaths(changedPaths);
 
             bool nothingToSync = syncer.originFiles == null || syncer.originFiles.Length == 0;
@@ -211,7 +211,7 @@ namespace ProjectSync
             progressBar.Maximum = syncer.CacheAllPaths();
             progressBar.Step = 1;
 
-            syncer.Sync(progressBar);
+            syncer.Sync();
 
             if (syncer.originFiles != null)
             {
@@ -253,15 +253,28 @@ namespace ProjectSync
                 UpdateSyncerParameters();
                 workerCount = syncer.CacheAllPaths();
                 progressBar.Maximum = workerCount;
+                func = syncer.Sync;
 
                 backgroundWorker1.RunWorkerAsync();
             }
         }
 
+        System.Threading.ThreadStart func;
+
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
+
+            System.Threading.Thread thread = new System.Threading.Thread(func);
+            thread.Start();
+
+            while (thread.IsAlive)
+            {
+                worker.ReportProgress(syncer.progress);
+                System.Threading.Thread.Sleep(1);
+            }
             
+            /*
             for (int i = 1; i <= workerCount; i++)
             {
                 if (worker.CancellationPending == true)
@@ -277,7 +290,7 @@ namespace ProjectSync
                     System.Threading.Thread.Sleep(1);
                     worker.ReportProgress(i);
                 }
-            }
+            }*/
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
