@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+using System.Security.Cryptography;
+
 namespace ProjectSync
 {
     public class Syncer
@@ -17,6 +19,8 @@ namespace ProjectSync
 
         public string[] excludedExtensions;
         public string[] excludedPrefixes;
+
+
 
         public string[] TrimOriginFolderFromPaths(string[] paths)
         {
@@ -70,7 +74,7 @@ namespace ProjectSync
 
             return false;
         }
-        
+
         bool IsExcludedByPrefix(string path)
         {
             if (excludedPrefixes == null)
@@ -162,13 +166,35 @@ namespace ProjectSync
 
                 bool exists = File.Exists(destination);
 
-                if (!exists)
+                if (!exists) // if it doesn't exist just overwrite it
                 {
                     changedPaths.Add(destination);
+                }
+                else // instead compare hashes
+                {
+                    byte[] sourceHash = GetFileSHA1(source);
+                    byte[] destinationHash = GetFileSHA1(destination);
+
+                    if (!sourceHash.SequenceEqual(destinationHash))
+                        changedPaths.Add(destination);
+
+                    //Console.WriteLine(System.Text.Encoding.Default.GetString(hash));
                 }
             }
 
             return changedPaths.ToArray();
+        }
+
+        byte[] GetFileSHA1(string path)
+        {
+            FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            var sha = SHA1.Create();
+            var hash = sha.ComputeHash(stream);
+
+            stream.Close();
+
+            return hash;
         }
 
         public string Sync()
@@ -192,7 +218,8 @@ namespace ProjectSync
 
                 bool exists = File.Exists(destination);
 
-                if (!exists)
+
+                if (!exists) // if it doesn't exist just copy it
                 {
                     string dir = Path.GetDirectoryName(destination);
                     Console.WriteLine(dir);
@@ -202,8 +229,10 @@ namespace ProjectSync
 
                     File.Copy(source, destination);
                 }
+                else
+                {
 
-                Console.WriteLine(destination + ", " + exists);
+                }
             }
 
             return "Success";
