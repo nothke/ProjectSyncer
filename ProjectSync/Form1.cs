@@ -29,8 +29,15 @@ namespace ProjectSync
 
             if (!string.IsNullOrEmpty(projectFilePath))
             {
-                LoadProjectFile(projectFilePath);
-                Log("Loaded last project: " + Path.GetFileName(projectFilePath));
+                if (File.Exists(projectFilePath))
+                {
+                    LoadProjectFile(projectFilePath);
+                    Log("Loaded last project: " + Path.GetFileName(projectFilePath));
+                }
+                else
+                {
+                    Log("Last project not found");
+                }
             }
 
             syncer = new Syncer();
@@ -73,7 +80,7 @@ namespace ProjectSync
         {
             LoadProjectFile(filePath);
 
-            Log("Loaded " + Path.GetFileName(filePath));
+            
         }
 
         void XMLAppend(XmlDocument doc, XmlElement appendTo, string key, string value)
@@ -85,16 +92,25 @@ namespace ProjectSync
 
         void LoadProjectFile(string path)
         {
-            XmlDocument xml = new XmlDocument();
-            xml.Load(path);
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load(path);
 
-            var root = xml["syncer_data"];
-            textBox_originFolder.Text = root["origin_path"].InnerText;
-            textBox_targetFolder.Text = root["target_path"].InnerText;
-            textBox_bypassExtensions.Text = root["bypass_extensions"].InnerText;
-            textBox_bypassPrefixes.Text = root["bypass_prefixes"].InnerText;
+                var root = xml["syncer_data"];
+                textBox_originFolder.Text = root["origin_path"].InnerText;
+                textBox_targetFolder.Text = root["target_path"].InnerText;
+                textBox_bypassExtensions.Text = root["bypass_extensions"].InnerText;
+                textBox_bypassPrefixes.Text = root["bypass_prefixes"].InnerText;
 
-            SetProjectFilePath(path);
+                SetProjectFilePath(path);
+
+                Log("Loaded " + Path.GetFileName(path));
+            }
+            catch (Exception e)
+            {
+                Log(e.ToString());
+            }
         }
 
         void SaveProjectFile(string path)
@@ -164,7 +180,7 @@ namespace ProjectSync
 
             bool nothingToSync = syncer.originFiles == null || syncer.originFiles.Length == 0;
 
-            listBox1.Items.Clear();
+            //listBox1.Items.Clear();
 
             if (!nothingToSync)
             {
@@ -189,7 +205,8 @@ namespace ProjectSync
 
             if (syncer.originFiles != null)
             {
-                listBox1.Items.Clear();
+                //listBox1.Items.Clear();
+                listBox1.Items.Add("Synced files:");
                 listBox1.Items.AddRange(syncer.GetShortNames());
             }
         }
@@ -213,6 +230,12 @@ namespace ProjectSync
         void Log(string str)
         {
             toolStripStatusLabel.Text = str;
+            listBox1.Items.Add(str);
+            listBox1.SelectedIndex = listBox1.Items.Count - 1;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
         }
     }
 }
