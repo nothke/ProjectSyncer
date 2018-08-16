@@ -179,6 +179,20 @@ namespace ProjectSync
         // Detect
         private void button_detect_Click(object sender, EventArgs e)
         {
+            if (backgroundWorker1.IsBusy != true)
+            {
+                UpdateSyncerParameters();
+
+                workerCount = syncer.CacheAllPaths();
+                progressBar.Step = 1;
+                progressBar.Maximum = workerCount;
+
+                process = syncer.FindChange();
+
+                backgroundWorker1.RunWorkerAsync();
+            }
+
+            /*
             UpdateSyncerParameters();
 
             progressBar.Maximum = syncer.CacheAllPaths();
@@ -203,12 +217,26 @@ namespace ProjectSync
                 Log("Nothing to Sync");
             }
             
-            //progressBar.Value = 0;
+            //progressBar.Value = 0;*/
         }
 
         // SYNC!
         private void button_sync_Click(object sender, EventArgs e)
         {
+            if (backgroundWorker1.IsBusy != true)
+            {
+                UpdateSyncerParameters();
+
+                workerCount = syncer.CacheAllPaths();
+                progressBar.Step = 1;
+                progressBar.Maximum = workerCount;
+
+                process = syncer.FindChangeAndSync();
+
+                backgroundWorker1.RunWorkerAsync();
+            }
+
+            /*
             UpdateSyncerParameters();
 
             progressBar.Maximum = syncer.CacheAllPaths();
@@ -222,7 +250,7 @@ namespace ProjectSync
                 outputBox.Items.Add("..");
                 outputBox.Items.AddRange(syncer.log.ToArray());
                 OutputBoxSelectLast();
-            }
+            }*/
 
             //progressBar.Value = 0;
         }

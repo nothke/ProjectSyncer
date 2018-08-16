@@ -220,7 +220,7 @@ namespace ProjectSync
 
                 for (int i = 0; i < changedPathsAsync.Count; i++)
                 {
-                    yield return changedPathsAsync[i];
+                    yield return "Change: " + TrimOrigin(changedPathsAsync[i]);
                 }
 
                 yield return "Found " + changedPathsAsync.Count + " changes";
